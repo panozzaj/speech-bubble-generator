@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geometer Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Geometer Generator</h1>
+  <p class="subtitle">Upload a face. Drag the circle and triangle to make a speech bubble.</p>
+
+  <div class="container">
+    <div class="controls">
+      <div class="upload-area" id="uploadArea">
+        <p>Drop, paste, or click to upload</p>
+        <input type="file" id="fileInput" accept="image/*" hidden>
+      </div>
+
+      <label>Ellipse size <input type="range" id="circleSize" min="20" max="500" value="380"></label>
+      <label>Triangle width <input type="range" id="triSize" min="20" max="400" value="150"></label>
+
+      <button id="downloadBtn" disabled>Download</button>
+    </div>
+
+    <div class="preview-section">
+      <canvas id="canvas" width="1" height="1"></canvas>
+    </div>
+  </div>
+
+  <footer>
+    <a href="https://bsky.app/profile/panozzaj.com" target="_blank" rel="noopener">@panozzaj.com</a>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
