@@ -5,6 +5,9 @@ const ctx = canvas.getContext('2d');
 const downloadBtn = document.getElementById('downloadBtn');
 const circleSizeInput = document.getElementById('circleSize');
 const triSizeInput = document.getElementById('triSize');
+const cartoonifyInput = document.getElementById('cartoonify');
+const outlineWidthInput = document.getElementById('outlineWidth');
+const outlineLabel = document.getElementById('outlineLabel');
 
 let img = null;
 let cw = 1, ch = 1;
@@ -112,7 +115,33 @@ function draw(forExport) {
   const b2x = baseX - Math.cos(perpAngle) * halfBase;
   const b2y = baseY - Math.sin(perpAngle) * halfBase;
 
+  const cartoon = cartoonifyInput.checked;
+  const outlineW = cartoon ? parseInt(outlineWidthInput.value) : 0;
+
+  if (cartoon) {
+    // Pass 1: Stroke both shapes in black at 2x width.
+    // The outer half becomes the visible outline; the inner half gets
+    // covered by the white fill in pass 2.
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = outlineW * 2;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+
+    ctx.beginPath();
+    ctx.moveTo(b1x, b1y);
+    ctx.lineTo(tipX, tipY);
+    ctx.lineTo(b2x, b2y);
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.ellipse(circlePos.x, circlePos.y, rx, ry, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // Pass 2: Fill both shapes white (covers interior + inner stroke half)
   ctx.fillStyle = '#ffffff';
+
   ctx.beginPath();
   ctx.moveTo(b1x, b1y);
   ctx.lineTo(tipX, tipY);
@@ -120,7 +149,6 @@ function draw(forExport) {
   ctx.closePath();
   ctx.fill();
 
-  // Ellipse
   ctx.beginPath();
   ctx.ellipse(circlePos.x, circlePos.y, rx, ry, 0, 0, Math.PI * 2);
   ctx.fill();
@@ -147,6 +175,11 @@ function drawHandle(x, y, active) {
 
 circleSizeInput.addEventListener('input', () => draw());
 triSizeInput.addEventListener('input', () => draw());
+cartoonifyInput.addEventListener('change', () => {
+  outlineLabel.style.display = cartoonifyInput.checked ? '' : 'none';
+  draw();
+});
+outlineWidthInput.addEventListener('input', () => draw());
 
 // --- Hit testing ---
 
